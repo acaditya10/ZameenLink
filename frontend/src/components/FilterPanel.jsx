@@ -139,7 +139,7 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                                 <div className="space-y-3">
                                     <div>
                                         <label htmlFor="price-min" className="block text-xs text-gray-600 mb-1">
-                                            Minimum: ₹{(filters.priceRange.min / 1000000).toFixed(1)}L
+                                            Minimum: ₹{(filters.priceRange.min / 100000).toFixed(1)}L
                                         </label>
                                         <input
                                             id="price-min"
@@ -155,7 +155,7 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                                     </div>
                                     <div>
                                         <label htmlFor="price-max" className="block text-xs text-gray-600 mb-1">
-                                            Maximum: ₹{(filters.priceRange.max / 1000000).toFixed(1)}L
+                                            Maximum: ₹{(filters.priceRange.max / 100000).toFixed(1)}L
                                         </label>
                                         <input
                                             id="price-max"
