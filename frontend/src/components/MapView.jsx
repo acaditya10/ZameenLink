@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { formatPrice } from '../utils/formatters';
 import { MapContainer, TileLayer, Marker, Popup, ZoomControl, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -122,7 +123,7 @@ function MapView({ properties, onPropertyClick, selectedProperty, showHeatmap })
                                 <p className="text-sm text-gray-600">{property.bhk} BHK • {property.plot_size_sqft} sq ft</p>
                                 <div className="flex justify-between items-center mt-2">
                                     <p className="text-lg font-semibold text-forest-600">
-                                        ₹{(property.actual_fair_value / 100000).toFixed(2)}L
+                                        {formatPrice(property.actual_fair_value)}
                                     </p>
                                     <span className={`text-xs px-2 py-1 rounded-full ${pricePerSqft > 7000 ? 'bg-red-100 text-red-800' :
                                         pricePerSqft > 5000 ? 'bg-gold-400/20 text-gold-600' :

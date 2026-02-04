@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatPrice } from '../utils/formatters';
 
 function ComparisonTable({ properties }) {
     if (!properties || properties.length === 0) return null;
@@ -22,7 +23,7 @@ function ComparisonTable({ properties }) {
                             </td>
                             <td className="px-3 py-2 whitespace-nowrap text-gray-600">{prop.plot_size_sqft} sqft</td>
                             <td className="px-3 py-2 whitespace-nowrap text-indigo-600 font-semibold">
-                                ₹{(prop.actual_fair_value / 100000).toFixed(1)}L
+                                {formatPrice(prop.actual_fair_value)}
                             </td>
                             <td className="px-3 py-2 whitespace-nowrap text-gray-500 text-xs">
                                 {prop.distance_from_query.toFixed(2)} km

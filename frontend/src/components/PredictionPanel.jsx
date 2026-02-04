@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { formatPrice } from '../utils/formatters';
 import { X, CheckCircle, TrendingUp } from 'lucide-react';
 import { predictPrice } from '../api/apiClient';
 import ScamAlert from './ScamAlert';
@@ -115,7 +116,7 @@ function PredictionPanel({ property, prediction, onClose, onPredict }) {
                         <div className="absolute top-0 right-0 w-20 h-20 bg-gold-400/10 rounded-bl-full -mr-4 -mt-4"></div>
                         <p className="text-sm text-forest-800 font-medium mb-1 relative z-10">ML Predicted Fair Value</p>
                         <p className="text-3xl font-bold text-forest-600 relative z-10">
-                            ₹{(prediction.predicted_fair_value / 100000).toFixed(2)} Lakhs
+                            {formatPrice(prediction.predicted_fair_value)}
                         </p>
                         <p className="text-sm text-charcoal-light mt-2 flex items-center gap-1 relative z-10">
                             <span className="bg-white/80 px-2 py-0.5 rounded text-xs border border-sand-300 font-mono text-forest-700">
@@ -143,7 +144,7 @@ function PredictionPanel({ property, prediction, onClose, onPredict }) {
                             </div>
                             <div className="bg-white/60 p-2 rounded border border-forest-100">
                                 <span className="text-forest-600 block text-xs">Margin of Error</span>
-                                <span className="font-semibold text-forest-800">±₹{(prediction.model_confidence.avg_error / 1000).toFixed(0)}K</span>
+                                <span className="font-semibold text-forest-800">±{formatPrice(prediction.model_confidence.avg_error)}</span>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatPrice } from '../utils/formatters';
 import { ChevronLeft, ChevronRight, MapPin, Home, Maximize2 } from 'lucide-react';
 
 function PropertyList({ properties, selectedProperty, onPropertySelect, isOpen, onToggle }) {
@@ -46,7 +47,7 @@ function PropertyList({ properties, selectedProperty, onPropertySelect, isOpen, 
                         <div className="divide-y divide-gray-100">
                             {properties.map((property) => {
                                 const isSelected = selectedProperty?.property_id === property.property_id;
-                                const priceInLakhs = (property.actual_fair_value / 100000).toFixed(2);
+
                                 const pricePerSqft = Math.round(property.actual_fair_value / property.plot_size_sqft);
 
                                 return (
@@ -77,9 +78,8 @@ function PropertyList({ properties, selectedProperty, onPropertySelect, isOpen, 
                                         <div className="mt-3 space-y-2">
                                             {/* Price */}
                                             <div className="flex items-baseline justify-between">
-                                                <span className={`text-lg font-bold ${isSelected ? 'text-forest-700' : 'text-gray-900'
-                                                    }`}>
-                                                    ₹{priceInLakhs}L
+                                                <span className={`text-lg font-bold ${isSelected ? 'text-forest-700' : 'text-gray-900'}`}>
+                                                    {formatPrice(property.actual_fair_value)}
                                                 </span>
                                                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
                                                     ₹{pricePerSqft}/sq ft

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { formatPrice } from '../utils/formatters';
 import { SlidersHorizontal, X, RotateCcw } from 'lucide-react';
 
 const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
@@ -139,7 +140,7 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                                 <div className="space-y-3">
                                     <div>
                                         <label htmlFor="price-min" className="block text-xs text-gray-600 mb-1">
-                                            Minimum: ₹{(filters.priceRange.min / 100000).toFixed(1)}L
+                                            Minimum: {formatPrice(filters.priceRange.min)}
                                         </label>
                                         <input
                                             id="price-min"
@@ -155,7 +156,7 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                                     </div>
                                     <div>
                                         <label htmlFor="price-max" className="block text-xs text-gray-600 mb-1">
-                                            Maximum: ₹{(filters.priceRange.max / 100000).toFixed(1)}L
+                                            Maximum: {formatPrice(filters.priceRange.max)}
                                         </label>
                                         <input
                                             id="price-max"
