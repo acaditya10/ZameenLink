@@ -1,0 +1,108 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+
+% Page Geometry
+\geometry{a4paper, margin=1in}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{ZameenLink Project Report}
+\lhead{Pawan Kumar}
+\rfoot{Page \thepage}
+
+% Title Format
+\titleformat{\section}{\Large\bfseries\color{blue}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{darkgray}}{}{0em}{}
+
+% Colors for Code
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegray},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{ZameenLink Project Report}}\\[1.5cm]
+    {\Large \textbf{Personal Contribution Statement}}\\[1cm]
+    
+    \textbf{Project Title:} ZameenLink - ML-Based Property Price Predictor\\
+    \textbf{Team Member:} Pawan Kumar\\
+    \textbf{Role:} Backend Developer \& API Specialist\\
+    \textbf{Date:} \today\\[3cm]
+    
+    \begin{abstract}
+        This detailed report highlights Pawan Kumar's contributions to the ZameenLink project. Key areas include the development of the Flask REST API, server-side logic, Swagger documentation integration, and frontend-backend connectivity.
+    \end{abstract}
+    
+    \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+The backbone of any modern web application is a robust API. My role in ZameenLink was to ensure that the heavy lifting done by the ML models and data scripts was accessible to the user interface. I designed and implemented the Flask-based REST API that serves as the bridge between our Python logic and the React frontend.
+
+\section{Core Responsibilities}
+\begin{itemize}
+    \item \textbf{API Development:} Writing the Flask application and defining routes.
+    \item \textbf{Integration:} Connecting the trained ML pickle models to live API requests.
+    \item \textbf{Documentation:} Integrating `Flasgger` (Swagger UI) for auto-generating API docs.
+    \item \textbf{Error Handling:} Ensuring the backend handles missing data or model errors gracefully.
+\end{itemize}
+
+\section{Detailed Technical Contribution}
+
+\subsection{Flask API Architecture (\texttt{app.py})}
+I built the main server file \texttt{app.py} which hosts the following critical endpoints:
+\begin{itemize}
+    \item \texttt{GET /api/properties}: Returns the list of properties for the map, supporting filtering.
+    \item \texttt{POST /api/predict}: The core function. It accepts property details (BHK, Size, Location), runs them through the loaded ML model, and returns the predicted price along with scam risk analysis.
+    \item \texttt{GET /api/metrics}: Exposes the internal performance metrics of our models to the frontend dashboard.
+\end{itemize}
+
+\subsection{Frontend Connectivity (\texttt{apiClient.js})}
+I also worked on the client-side AXIOS configuration to ensure smooth communication. I handled CORS (Cross-Origin Resource Sharing) issues within Flask to allow the frontend (localhost:3000) to talk to the backend (localhost:5000) securely.
+
+\subsection{Swagger Documentation}
+To make our work professional and easy to test, I integrated Swagger UI. This allows anyone to visit \texttt{/api/docs} and test our endpoints directly from the browser without needing a frontend interface.
+
+\section{Challenges \& Solutions}
+\textbf{Challenge:} The API would crash if the ML models weren't trained before starting the server.\\
+\textbf{Solution:} I implemented a robust `try-except` block during the server startup. If the model files are missing, the server still starts but enters a "Simulated Mode" or returns clear error messages instructing the user to run the training script first.
+
+\section{Conclusion}
+My contribution ensured the stability and connectivity of the ZameenLink platform. By building a clean, documented, and robust API, I enabled the rest of the team to build feature-rich interfaces without worrying about the underlying data communication.
+
+\end{document}

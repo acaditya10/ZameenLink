@@ -1,0 +1,121 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+
+% Page Geometry
+\geometry{a4paper, margin=1in}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{ZameenLink Project Report}
+\lhead{Aditya Pathak}
+\rfoot{Page \thepage}
+
+% Title Format
+\titleformat{\section}{\Large\bfseries\color{blue}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{darkgray}}{}{0em}{}
+
+% Colors for Code
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegray},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{ZameenLink Project Report}}\\[1.5cm]
+    {\Large \textbf{Personal Contribution Statement}}\\[1cm]
+    
+    \textbf{Project Title:} ZameenLink - ML-Based Property Price Predictor\\
+    \textbf{Team Member:} Aditya Pathak\\
+    \textbf{Role:} Frontend Lead \& Map Architect\\
+    \textbf{Date:} \today\\[3cm]
+    
+    \begin{abstract}
+        This report outlines Aditya Pathak's contributions to the ZameenLink project, focusing on the core React architecture, Leaflet map integration, and interactive user experience components.
+    \end{abstract}
+    
+    \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+As the Frontend Lead for ZameenLink, my primary goal was to create an intuitive and visual user interface that makes complex property data easy to understand. I utilized React.js and Leaflet to build the core mapping experience, which serves as the heart of the application.
+
+\section{Core Responsibilities}
+\begin{itemize}
+    \item \textbf{Frontend Architecture:} Setting up the Vite + React project structure and managing dependencies.
+    \item \textbf{Map Integration:} Implementing the interactive map using \texttt{react-leaflet}.
+    \item \textbf{Component Logic:} Developing the sophisticated state management for selecting properties and synchronizing the map with the side panel.
+    \item \textbf{Interactive UX:} Creating custom marker systems and map animations.
+\end{itemize}
+
+\section{Detailed Technical Contribution}
+
+\subsection{Map System Implementation (\texttt{MapView.jsx})}
+The most complex part of the frontend was the map. My contributions included:
+\begin{itemize}
+    \item \textbf{Custom Markers:} I wrote a function \texttt{createCustomIcon} that dynamically changes the marker color based on the property price (Green for affordable, Red for expensive).
+    \item \textbf{FlyTo Animation:} Implemented a \texttt{MapController} component that automatically pans and zooms (flies) to a property when selected from the list.
+    \item Code Snippet:
+    \begin{lstlisting}[language=JavaScript]
+const createCustomIcon = (pricePerSqft, isSelected) => {
+    let color = '#10B981'; // Green
+    if (pricePerSqft > 7000) color = '#DC2626'; // Red
+    
+    return L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="background-color: ${color}; ..."></div>`
+    });
+};
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{Main Application Logic (\texttt{App.jsx})}
+I managed the central state of the application:
+\begin{itemize}
+    \item \texttt{selectedProperty}: Ensuring that clicking a map marker updates the info panel, and clicking an item in the list updates the map.
+    \item \texttt{showHeatmap}: Toggling the heatmap overlay.
+    \item Integrating the API calls to fetch initial property data on load.
+\end{itemize}
+
+\section{Challenges \& Solutions}
+\textbf{Challenge:} Leaflet maps often have issues rendering correctly inside flexible containers.\\
+\textbf{Solution:} I ensured the map container had explicit height definitions in CSS and used the \texttt{invalidateSize()} method logic via React hooks to ensure the map resized correctly when the sidebar opened/closed.
+
+\section{Conclusion}
+My work provided the "face" of ZameenLink. By creating a responsive, interactive map system, I ensured that users could visually explore the Bhopal real estate market effectively.
+
+\end{document}

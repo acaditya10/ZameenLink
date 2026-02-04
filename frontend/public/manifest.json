@@ -1,0 +1,68 @@
+{
+    "name": "ZameenLink",
+    "short_name": "ZameenLink",
+    "description": "ML-powered property price prediction and scam detection for Bhopal",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#f5f1e8",
+    "theme_color": "#2f5233",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot-wide.jpg",
+            "sizes": "1280x720",
+            "type": "image/jpeg",
+            "form_factor": "wide",
+            "label": "ZameenLink Map View"
+        },
+        {
+            "src": "/screenshot-mobile.jpg",
+            "sizes": "750x1334",
+            "type": "image/jpeg",
+            "label": "Property Prediction"
+        }
+    ],
+    "categories": [
+        "business",
+        "finance",
+        "lifestyle"
+    ],
+    "shortcuts": [
+        {
+            "name": "View Map",
+            "short_name": "Map",
+            "description": "Open interactive property map",
+            "url": "/",
+            "icons": [
+                {
+                    "src": "/icon-192x192.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ],
+    "share_target": {
+        "action": "/share",
+        "method": "GET",
+        "params": {
+            "title": "title",
+            "text": "text",
+            "url": "url"
+        }
+    }
+}

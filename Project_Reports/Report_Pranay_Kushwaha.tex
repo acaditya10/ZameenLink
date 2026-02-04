@@ -1,0 +1,117 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+
+% Page Geometry
+\geometry{a4paper, margin=1in}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{ZameenLink Project Report}
+\lhead{Pranay Kushwaha}
+\rfoot{Page \thepage}
+
+% Title Format
+\titleformat{\section}{\Large\bfseries\color{blue}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{darkgray}}{}{0em}{}
+
+% Colors for Code
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegray},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{ZameenLink Project Report}}\\[1.5cm]
+    {\Large \textbf{Personal Contribution Statement}}\\[1cm]
+    
+    \textbf{Project Title:} ZameenLink - ML-Based Property Price Predictor\\
+    \textbf{Team Member:} Pranay Kushwaha\\
+    \textbf{Role:} UI/UX Designer \& Documentation Specialist\\
+    \textbf{Date:} \today\\[3cm]
+    
+    \begin{abstract}
+        This report summarizes Pranay Kushwaha's contributions to the ZameenLink project. It focuses on the User Interface design, TailwindCSS implementation, responsive layouts, search functionality, and comprehensive project documentation.
+    \end{abstract}
+    
+    \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+A complex system is only useful if it is usable. My role in ZameenLink was to wrap our advanced Machine Learning and mapping technologies in a professional, accessible, and responsive user interface. I was responsible for the styling architecture, the filtering mechanisms, and ensuring the project was well-documented for future developers.
+
+\section{Core Responsibilities}
+\begin{itemize}
+    \item \textbf{UI Design & Styling:} Implementing a consistent design system using TailwindCSS.
+    \item \textbf{Components:} Building the Filter Panel, Search functionality, and Result Lists.
+    \item \textbf{Responsiveness:} Ensuring the application works seamlessly on different screen sizes.
+    \item \textbf{Documentation:} Writing the README, Installation Guides, and Setup scripts.
+\end{itemize}
+
+\section{Detailed Technical Contribution}
+
+\subsection{Styling Architecture (TailwindCSS)}
+I established the visual identity of the application:
+\begin{itemize}
+    \item Configured the Tailwind theme to use a professional color palette (Primary: Emerald/Forest Green for trust, Accent: Gold for value).
+    \item Designed the \texttt{PredictionPanel.jsx} layout to handle different states (Loading, Result, Error) gracefully.
+    \item Created the "Glassmorphism" effect used in the overlay panels to ensure the map remains visible underneath the UI.
+\end{itemize}
+
+\subsection{Filter & Search Logic (\texttt{FilterPanel.jsx})}
+I implemented the user controls that allow efficient data navigation:
+\begin{itemize}
+    \item Built the sidebar filters that allow users to sort properties by Price, BHK, and Area.
+    \item Implemented the \texttt{SearchBar} component that filters the visible map markers in real-time as the user types.
+\end{itemize}
+
+\subsection{Project Documentation}
+I authored the \texttt{README.md} and \texttt{QUICKSTART.md} files. This is a critical engineering contribution as it ensures:
+\begin{itemize}
+    \item New developers can onboard in under 10 minutes.
+    \item Prerequisites (Python/Node versions) are clearly stated.
+    \item Common errors (like missing venv) are addressed in a troubleshooting section.
+\end{itemize}
+
+\section{Challenges \& Solutions}
+\textbf{Challenge:} The side panel was taking up too much space on smaller laptop screens.\\
+\textbf{Solution:} I implemented a collapsible sidebar design and used Tailwind's responsive prefixes (\texttt{md:w-1/3}, \texttt{lg:w-1/4}) to ensure the map always takes priority on smaller viewports.
+
+\section{Conclusion}
+My work bridges the gap between the code and the user. By ensuring a polished UI and clear documentation, I facilitated both the end-user experience and the developer experience for the team.
+
+\end{document}

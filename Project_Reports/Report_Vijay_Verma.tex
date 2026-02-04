@@ -1,0 +1,117 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+
+% Page Geometry
+\geometry{a4paper, margin=1in}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{ZameenLink Project Report}
+\lhead{Vijay Verma}
+\rfoot{Page \thepage}
+
+% Title Format
+\titleformat{\section}{\Large\bfseries\color{blue}}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\large\bfseries\color{darkgray}}{}{0em}{}
+
+% Colors for Code
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegray},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+% Title Page
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge \textbf{ZameenLink Project Report}}\\[1.5cm]
+    {\Large \textbf{Personal Contribution Statement}}\\[1cm]
+    
+    \textbf{Project Title:} ZameenLink - ML-Based Property Price Predictor\\
+    \textbf{Team Member:} Vijay Verma\\
+    \textbf{Role:} Data Scientist \& Visualization Specialist\\
+    \textbf{Date:} \today\\[3cm]
+    
+    \begin{abstract}
+        This report documents Vijay Verma's role in the ZameenLink project. It focuses on the synthetic data generation pipeline, data preprocessing, and the implementation of advanced visualization components like heatmaps and analytics charts.
+    \end{abstract}
+    
+    \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Machine Learning models are only as good as the data they are trained on, and insights are only useful if they are visualized clearly. My role in ZameenLink was bridging the gap between raw data and visual understanding. I was responsible for generating the realistic dataset for Bhopal and creating the visual analytic tools in the frontend.
+
+\section{Core Responsibilities}
+\begin{itemize}
+    \item \textbf{Data Generation:} Creating highly realistic synthetic property data for Bhopal.
+    \item \textbf{Data Visualization:} Implementing charts (Bar, Pie) using Recharts.
+    \item \textbf{Heatmap Logic:} Developing the visual density layers for property prices.
+    \item \textbf{Comparison Tools:} Building the logic to compare different ML models side-by-side.
+\end{itemize}
+
+\section{Detailed Technical Contribution}
+
+\subsection{Data Generator (\texttt{data\_generator.py})}
+Since real-time API access to real estate data is expensive/restricted, I built a sophisticated script to generate 300+ realistic property listings.
+\begin{itemize}
+    \item Mapped real areas in Bhopal (e.g., Arera Colony, MP Nagar).
+    \item Assigned base prices per square foot for each zone to ensure realism.
+    \item Added random variance to simulate market fluctuations.
+    \item Result: A robust CSV dataset that allows our ML models to train effectively.
+\end{itemize}
+
+\subsection{Analytics Dashboard (\texttt{Analytics.jsx})}
+I integrated the \texttt{recharts} library to provide users with deep insights:
+\begin{itemize}
+    \item \textbf{Model Accuracy Chart:} A bar chart comparing RMSE and MAE across our three models.
+    \item \textbf{Price Distribution:} Visualizing the spread of property prices in the current view.
+\end{itemize}
+
+\subsection{Heatmap Visualization (\texttt{PriceHeatmap.jsx})}
+I implemented the Heatmap layer using Leaflet:
+\begin{itemize}
+    \item This visualizes high-value zones in Red and low-value zones in Blue/Green.
+    \item It processes the lat/long and price intensity of all properties to generate a seamless gradient overlay on the map.
+\end{itemize}
+
+\section{Challenges \& Solutions}
+\textbf{Challenge:} The generated data initially lacked geographic consistency (e.g., cheap properties in expensive zones).\\
+\textbf{Solution:} I implemented a "Zone Multiplier" logic in the generator script that enforces a base price floor for premium areas like Arera Colony.
+
+\section{Conclusion}
+My work ensured that ZameenLink was not just a functional app but an analytical tool. The data generation pipeline enabled the project to proceed without external dependencies, and the visualizations provide the primary value-add for the end user.
+
+\end{document}
