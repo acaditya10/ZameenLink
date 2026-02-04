@@ -48,11 +48,16 @@ def detect_scam(listed_price, predicted_fair_value):
         message = '✓ FAIR PRICE: Within acceptable market range'
         color = '#10B981'  # Green
         is_scam = False
-    else:
+    elif deviation > -30:
         risk = 'BARGAIN'
         message = '⭐ GREAT DEAL: Price below market average!'
         color = '#3B82F6'  # Blue
         is_scam = False
+    else:
+        risk = 'SUSPICIOUSLY LOW'
+        message = '⚠️ HIGH RISK: Price is suspiciously low. Verify title/documents!'
+        color = '#BE123C'  # Rose-700
+        is_scam = True
     
     return {
         'risk_level': risk,
@@ -73,6 +78,7 @@ if __name__ == "__main__":
         (7800000, 7000000, "Medium risk"),
         (7200000, 7000000, "Fair price"),
         (6500000, 7000000, "Bargain"),
+        (3000000, 7000000, "Suspiciously Low"),
     ]
     
     for listed, predicted, description in test_cases:
