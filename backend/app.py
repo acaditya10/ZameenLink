@@ -12,11 +12,13 @@ import json
 import os
 from geopy.distance import geodesic
 
-from utils.scam_detector import detect_scam
+from utils.scam_detector import detect_scam, detect_scam_enhanced
+from utils.emi_calculator import calculate_emi
+from retrain_scheduler import start_scheduler, start_retrain_async, get_retrain_status
 from config import (
     API_HOST, API_PORT, DEBUG_MODE,
     FEATURE_COLUMNS, DATASET_FILE,
-    BEST_MODEL_FILE, MODEL_METRICS_FILE
+    BEST_MODEL_FILE, MODEL_METRICS_FILE, ZONE_BASE_PRICES
 )
 
 app = Flask(__name__)
@@ -74,26 +76,33 @@ swagger_template = {
 
 swagger = Swagger(app, config=swagger_config, template=swagger_template)
 
+# Application state (mutable dictionary for hot-reloading after retrain)
+app_state = {
+    'df': None,
+    'model': None,
+    'metrics': {}
+}
+
 # Load data and model on startup
 print("Loading dataset and ML model...")
 try:
-    df = pd.read_csv(DATASET_FILE)
-    print(f"✓ Loaded {len(df)} properties")
+    app_state['df'] = pd.read_csv(DATASET_FILE)
+    print(f"✓ Loaded {len(app_state['df'])} properties")
     
     with open(BEST_MODEL_FILE, 'rb') as f:
-        model = pickle.load(f)
+        app_state['model'] = pickle.load(f)
     print(f"✓ Loaded model: {BEST_MODEL_FILE}")
     
     with open(MODEL_METRICS_FILE, 'r') as f:
-        metrics = json.load(f)
-    print(f"✓ Loaded metrics for {len(metrics)} models")
+        app_state['metrics'] = json.load(f)
+    print(f"✓ Loaded metrics for {len(app_state['metrics'])} models")
+    
+    # Start auto-retrain scheduler
+    start_scheduler(app_state)
     
 except Exception as e:
     print(f"❌ Error loading data/model: {e}")
     print("Please run 'python model/train_model.py' first!")
-    df = None
-    model = None
-    metrics = {}
 
 
 @app.route('/api/health', methods=['GET'])
@@ -123,8 +132,8 @@ def health_check():
     """
     return jsonify({
         'status': 'healthy',
-        'model': 'Random Forest loaded' if model else 'No model loaded',
-        'properties': len(df) if df is not None else 0
+        'model': 'Random Forest loaded' if app_state['model'] else 'No model loaded',
+        'properties': len(app_state['df']) if app_state['df'] is not None else 0
     })
 
 
@@ -180,17 +189,42 @@ def get_all_properties():
       500:
         description: Dataset not loaded
     """
-    if df is None:
+    if app_state['df'] is None:
         return jsonify({'error': 'Dataset not loaded'}), 500
     
-    limit = int(request.args.get('limit', 100))
+    import random
+    
+    AMENITIES_POOL = [
+        "Close to Hospital", "Close to Park", "Close to Market", "Close to School",
+        "Less Crowded", "More Crowded", "Excellent Ventilation", "Pet Friendly",
+        "24/7 Water Supply", "Power Backup", "High Security", "Gated Community",
+        "Gymnasium", "Swimming Pool", "Club House", "Kids Play Area",
+        "Vaastu Compliant", "Corner Property", "Main Road Facing", "Garden Facing"
+    ]
+
+    limit = int(request.args.get('limit', 1000))
     area = request.args.get('area', None)
     
-    filtered_df = df
+    filtered_df = app_state['df']
     if area:
-        filtered_df = df[df['area_name'] == area]
+        filtered_df = app_state['df'][app_state['df']['area_name'] == area]
     
     properties = filtered_df.head(limit).to_dict(orient='records')
+    
+    # Inject deterministic amenities
+    for p in properties:
+        random.seed(p.get('property_id', 0))
+        num_amenities = random.randint(5, 9)
+        
+        prop_type = "Commercial space" if p.get('zone_type') == 'commercial' else "Residential property"
+        bhk_str = f"{p.get('bhk', 1)} BHK" if p.get('zone_type') != 'commercial' else f"{p.get('plot_size_sqft')} sq.ft"
+        
+        p['description_text'] = f"A well-maintained {bhk_str} {prop_type.lower()} located in the prime area of {p.get('area_name', 'Bhopal')}. " \
+                                f"It offers excellent connectivity, modern aesthetics, and a comfortable lifestyle."
+        
+        p['amenities'] = random.sample(AMENITIES_POOL, num_amenities)
+        
+    random.seed() # reset seed
     
     return jsonify({
         'count': len(properties),
@@ -227,10 +261,10 @@ def get_areas():
       500:
         description: Dataset not loaded
     """
-    if df is None:
+    if app_state['df'] is None:
         return jsonify({'error': 'Dataset not loaded'}), 500
     
-    area_stats = df.groupby('area_name').agg({
+    area_stats = app_state['df'].groupby('area_name').agg({
         'property_id': 'count',
         'actual_fair_value': 'mean'
     }).reset_index()
@@ -331,7 +365,7 @@ def predict_price():
       500:
         description: Model not loaded
     """
-    if model is None:
+    if app_state['model'] is None:
         return jsonify({'error': 'Model not loaded'}), 500
     
     try:
@@ -341,19 +375,29 @@ def predict_price():
         features = [data.get(col, 0) for col in FEATURE_COLUMNS]
         
         # Predict
-        predicted_price = model.predict([features])[0]
+        predicted_price = app_state['model'].predict([features])[0]
         
         # Scam detection
         scam_analysis = {'risk_level': 'UNKNOWN'}
         if 'listed_price' in data and data['listed_price'] > 0:
-            scam_analysis = detect_scam(data['listed_price'], predicted_price)
+            description = data.get('description', None)
+            image_urls = data.get('image_urls', [])
+            image_count = data.get('image_count', len(image_urls))
+            
+            scam_analysis = detect_scam_enhanced(
+                data['listed_price'], 
+                predicted_price,
+                description=description,
+                image_data=image_urls if image_urls else None,
+                image_count=image_count
+            )
         
         # Find nearby properties for comparison
-        if df is not None and 'latitude' in data and 'longitude' in data:
+        if app_state['df'] is not None and 'latitude' in data and 'longitude' in data:
             property_location = (data['latitude'], data['longitude'])
             
             # Calculate distances
-            df_copy = df.copy()
+            df_copy = app_state['df'].copy()
             df_copy['distance_from_query'] = df_copy.apply(
                 lambda row: geodesic(
                     property_location,
@@ -374,8 +418,8 @@ def predict_price():
             'scam_analysis': scam_analysis,
             'nearby_properties': nearby,
             'model_confidence': {
-                'r2_score': metrics.get('Random Forest', {}).get('r2_score', 0),
-                'avg_error': metrics.get('Random Forest', {}).get('mae', 0)
+                'r2_score': app_state['metrics'].get('Random Forest', {}).get('r2_score', 0),
+                'avg_error': app_state['metrics'].get('Random Forest', {}).get('mae', 0)
             }
         })
         
@@ -414,10 +458,10 @@ def get_heatmap_data():
       500:
         description: Dataset not loaded
     """
-    if df is None:
+    if app_state['df'] is None:
         return jsonify({'error': 'Dataset not loaded'}), 500
     
-    heatmap_data = df.apply(
+    heatmap_data = app_state['df'].apply(
         lambda row: [
             row['latitude'],
             row['longitude'],
@@ -428,8 +472,8 @@ def get_heatmap_data():
     
     return jsonify({
         'heatmap_points': heatmap_data[:200],  # Limit for performance
-        'max_price': float(df['actual_fair_value'].max() / df['plot_size_sqft'].min()),
-        'min_price': float(df['actual_fair_value'].min() / df['plot_size_sqft'].max())
+        'max_price': float(app_state['df']['actual_fair_value'].max() / app_state['df']['plot_size_sqft'].min()),
+        'min_price': float(app_state['df']['actual_fair_value'].min() / app_state['df']['plot_size_sqft'].max())
     })
 
 
@@ -460,7 +504,133 @@ def get_model_metrics():
                 type: number
                 example: 1958220.11
     """
-    return jsonify(metrics)
+    return jsonify(app_state['metrics'])
+
+
+@app.route('/api/emi', methods=['POST'])
+def calculate_emi_endpoint():
+    """
+    Calculate EMI
+    ---
+    tags:
+      - Analytics
+    summary: Calculate EMI and amortization schedule
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            principal:
+              type: number
+            annual_rate:
+              type: number
+            tenure_years:
+              type: integer
+            down_payment_percent:
+              type: number
+    responses:
+      200:
+        description: EMI calculation successful
+    """
+    data = request.json
+    principal = data.get('principal', 0)
+    annual_rate = data.get('annual_rate', 8.5)
+    tenure_years = data.get('tenure_years', 20)
+    down_payment_percent = data.get('down_payment_percent', 20)
+    
+    result = calculate_emi(principal, annual_rate, tenure_years, down_payment_percent)
+    return jsonify(result)
+
+
+@app.route('/api/trends', methods=['GET'])
+def get_price_trends():
+    """
+    Get price trends for an area
+    ---
+    tags:
+      - Analytics
+    summary: Generate quarterly price trends for an area
+    parameters:
+      - name: area
+        in: query
+        type: string
+        required: true
+    responses:
+      200:
+        description: Price trends generated
+    """
+    area = request.args.get('area')
+    if not area:
+        return jsonify({'error': 'Area parameter required'}), 400
+        
+    base_price = ZONE_BASE_PRICES.get(area, 5000)
+    
+    # Generate 8 quarters of simulated historical data
+    # (Using a realistic upward trend with some noise)
+    import random
+    import math
+    
+    trends = []
+    current_price = base_price * 0.85  # Start from 2 years ago (15% lower)
+    
+    quarters = ['Q3 2024', 'Q4 2024', 'Q1 2025', 'Q2 2025', 'Q3 2025', 'Q4 2025', 'Q1 2026', 'Q2 2026']
+    
+    for i, q in enumerate(quarters):
+        # Base growth + random noise
+        growth = 1.015 + (random.random() * 0.02)
+        if i > 0:
+            current_price *= growth
+            
+        trends.append({
+            'quarter': q,
+            'price_per_sqft': round(current_price)
+        })
+        
+    # Ensure current base price is the latest
+    trends[-1]['price_per_sqft'] = base_price
+    
+    return jsonify({
+        'area': area,
+        'current_price': base_price,
+        'growth_2yr': round(((base_price / (base_price * 0.85)) - 1) * 100, 1),
+        'history': trends
+    })
+
+
+@app.route('/api/retrain', methods=['POST'])
+def trigger_retrain():
+    """
+    Trigger manual model retraining
+    ---
+    tags:
+      - Analytics
+    summary: Start background model retraining
+    responses:
+      200:
+        description: Retrain started
+    """
+    result = start_retrain_async(app_state)
+    return jsonify(result)
+
+
+@app.route('/api/retrain/status', methods=['GET'])
+def retrain_status():
+    """
+    Get model retraining status
+    ---
+    tags:
+      - Analytics
+    summary: Get background model retraining status
+    responses:
+      200:
+        description: Current status
+    """
+    status = get_retrain_status()
+    # Also attach the current live metrics so UI can compare
+    status['current_metrics'] = app_state['metrics']
+    return jsonify(status)
 
 
 if __name__ == '__main__':

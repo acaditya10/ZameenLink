@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ChevronUp, ChevronDown, BarChart3 } from 'lucide-react';
+import RetrainStatus from './RetrainStatus';
 
 function Analytics({ metrics }) {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -101,6 +102,8 @@ function Analytics({ metrics }) {
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
+                        
+                        <RetrainStatus />
                     </div>
                 </div>
             </div>

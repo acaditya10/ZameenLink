@@ -1,36 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import { formatPrice } from '../utils/formatters';
-import { X, CheckCircle, TrendingUp } from 'lucide-react';
+import { X, CheckCircle, TrendingUp, Bookmark } from 'lucide-react';
 import { predictPrice } from '../api/apiClient';
+import { useAuth } from '../contexts/AuthContext';
+import { saveProperty, removeSavedProperty, getSavedProperties, savePredictionHistory } from '../services/firestoreService';
 import ScamAlert from './ScamAlert';
 import ComparisonTable from './ComparisonTable';
+import EMICalculator from './EMICalculator';
+import PriceTrendChart from './PriceTrendChart';
 
 function PredictionPanel({ property, prediction, onClose, onPredict }) {
     const [loading, setLoading] = useState(false);
-    const [listedPrice, setListedPrice] = useState(property.listed_price || '');
+    const [isSaved, setIsSaved] = useState(false);
+    const [savingBookmark, setSavingBookmark] = useState(false);
+    const { user, incrementPredictionCount } = useAuth();
 
     // Reset local state when property changes
     useEffect(() => {
-        // If we have a new property, we might want to automatically fetch prediction
-        // or wait for user action. Based on requirements "System shows ML-predicted price within 2 seconds",
-        // let's auto-fetch if not already present.
         if (property && !prediction) {
             fetchPrediction();
         }
+        // Check if property is saved
+        if (user && property) {
+            checkIfSaved();
+        } else {
+            setIsSaved(false);
+        }
     }, [property]);
+
+    const checkIfSaved = async () => {
+        try {
+            const saved = await getSavedProperties(user.uid);
+            setIsSaved(saved.some(p => String(p.property_id) === String(property.property_id)));
+        } catch (error) {
+            console.error('Failed to check saved status:', error);
+        }
+    };
 
     const fetchPrediction = async () => {
         setLoading(true);
         try {
-            const result = await predictPrice({
-                ...property,
-                listed_price: listedPrice || property.listed_price
-            });
+            const result = await predictPrice(property);
             onPredict(result);
+            incrementPredictionCount();
+
+            // Save to prediction history if logged in
+            if (user) {
+                try {
+                    // Fire and forget so we don't block the UI if Firestore hangs
+                    savePredictionHistory(user.uid, property, result).catch(err => {
+                        console.error('Failed to save prediction history:', err);
+                    });
+                } catch (err) {
+                    console.error('Failed to save prediction history:', err);
+                }
+            }
         } catch (error) {
             console.error('Prediction failed:', error);
         }
         setLoading(false);
+    };
+
+    const toggleSave = async () => {
+        if (!user) return;
+        const newSavedState = !isSaved;
+        setIsSaved(newSavedState); // optimistic update
+        try {
+            if (!newSavedState) {
+                removeSavedProperty(user.uid, property.property_id).catch(err => {
+                    console.error('Failed to remove save:', err);
+                    setIsSaved(true); // revert
+                });
+            } else {
+                saveProperty(user.uid, property).catch(err => {
+                    console.error('Failed to toggle save:', err);
+                    setIsSaved(false); // revert
+                });
+            }
+        } catch (error) {
+            console.error('Failed to process toggle save:', error);
+            setIsSaved(!newSavedState);
+        }
     };
 
     if (!property) return null;
@@ -51,13 +101,25 @@ function PredictionPanel({ property, prediction, onClose, onPredict }) {
                     </h2>
                     <p className="text-sm text-gold-400">Property #{property.property_id}</p>
                 </div>
-                <button
-                    onClick={onClose}
-                    className="hover:bg-sand-500/20 p-2 rounded-lg transition text-sand-100 hover:text-sand-50 flex-shrink-0"
-                    aria-label="Close property details"
-                >
-                    <X size={24} />
-                </button>
+                <div className="flex items-center gap-2">
+                    {user && (
+                        <button
+                            onClick={toggleSave}
+                            disabled={savingBookmark}
+                            className={`p-2 rounded-lg transition ${isSaved ? 'bg-gold-500/20 text-gold-400' : 'hover:bg-sand-500/20 text-sand-100 hover:text-sand-50'}`}
+                            aria-label={isSaved ? 'Remove from saved' : 'Save property'}
+                        >
+                            {isSaved ? <Bookmark size={22} fill="currentColor" /> : <Bookmark size={22} />}
+                        </button>
+                    )}
+                    <button
+                        onClick={onClose}
+                        className="hover:bg-sand-500/20 p-2 rounded-lg transition text-sand-100 hover:text-sand-50 flex-shrink-0"
+                        aria-label="Close property details"
+                    >
+                        <X size={24} />
+                    </button>
+                </div>
             </div>
 
             {/* Property Details */}
@@ -79,27 +141,31 @@ function PredictionPanel({ property, prediction, onClose, onPredict }) {
                         <p className="text-xs text-charcoal-light uppercase tracking-wide">Zone</p>
                         <p className="text-lg font-semibold text-forest-700 capitalize">{property.zone_type}</p>
                     </div>
-                </div>
-
-                {/* Input for Listed Price to check scam */}
-                <div className="mt-4 pt-4 border-t border-sand-300">
-                    <label className="text-xs text-charcoal-light uppercase tracking-wide block mb-1">Listed Price (₹)</label>
-                    <div className="flex gap-2">
-                        <input
-                            type="number"
-                            value={listedPrice}
-                            onChange={(e) => setListedPrice(Number(e.target.value))}
-                            className="flex-1 px-3 py-2 border border-sand-400 rounded-md focus:outline-none focus:ring-2 focus:ring-forest-500 bg-sand-50"
-                            placeholder="Enter listed price"
-                        />
-                        <button
-                            onClick={fetchPrediction}
-                            disabled={loading}
-                            className="bg-forest-600 text-sand-50 px-4 py-2 rounded-md hover:bg-forest-700 disabled:opacity-50 text-sm font-medium transition-colors"
-                        >
-                            {loading ? '...' : 'Check'}
-                        </button>
-                    </div>
+                    
+                    {/* Dynamic Amenities & Description */}
+                    {(property.description_text || (property.amenities && property.amenities.length > 0)) && (
+                        <div className="col-span-2 mt-2 pt-4 border-t border-sand-300 space-y-4">
+                            {property.description_text && (
+                                <div>
+                                    <p className="text-xs text-charcoal-light uppercase tracking-wide mb-1.5 font-bold">About Property</p>
+                                    <p className="text-sm text-gray-700 leading-relaxed">{property.description_text}</p>
+                                </div>
+                            )}
+                            
+                            {property.amenities && property.amenities.length > 0 && (
+                                <div>
+                                    <p className="text-xs text-charcoal-light uppercase tracking-wide mb-2 font-bold">Unique Features & Amenities</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {property.amenities.map((amenity, idx) => (
+                                            <span key={idx} className="text-[11px] font-medium bg-forest-50 text-forest-800 px-2 py-1 rounded border border-forest-200 shadow-sm">
+                                                {amenity}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -159,6 +225,12 @@ function PredictionPanel({ property, prediction, onClose, onPredict }) {
                             <ComparisonTable properties={prediction.nearby_properties} />
                         </div>
                     )}
+
+                    {/* EMI Calculator */}
+                    <EMICalculator propertyPrice={prediction.predicted_fair_value} />
+
+                    {/* Price Trend Chart */}
+                    <PriceTrendChart areaName={property.area_name} />
                 </div>
             ) : (
                 <div className="p-8 text-center text-gray-500">

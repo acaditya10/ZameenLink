@@ -7,8 +7,13 @@ import SearchBar from './components/SearchBar';
 import FilterPanel from './components/FilterPanel';
 import SortOptions from './components/SortOptions';
 import PropertyList from './components/PropertyList';
+import LoginButton from './components/LoginButton';
+import ProfilePanel from './components/ProfilePanel';
+import AuthPrompt from './components/AuthPrompt';
 import { AnalyticsSkeleton } from './components/LoadingSkeleton';
+import { useAuth } from './contexts/AuthContext';
 import { fetchProperties, fetchMetrics } from './api/apiClient';
+import { Map, Layers } from 'lucide-react';
 
 function App() {
   const [properties, setProperties] = useState([]);
@@ -17,10 +22,13 @@ function App() {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [showHeatmap, setShowHeatmap] = useState(false);
+  const [mapLayer, setMapLayer] = useState('osm');
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentSort, setCurrentSort] = useState('price-asc');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showProfile, setShowProfile] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     loadData();
@@ -156,7 +164,7 @@ function App() {
       >
         {/* Header */}
         <header
-          className="bg-forest-500 text-sand-50 shadow-xl z-20 shrink-0 border-b border-gold-500/30"
+          className="bg-forest-500 text-sand-50 shadow-xl z-[3000] relative shrink-0 border-b border-gold-500/30"
           role="banner"
         >
           <div className="pl-3 pr-4 py-3">
@@ -184,13 +192,23 @@ function App() {
                 </div>
               </div>
 
-              {/* Right: Property Count */}
-              <div className="flex justify-end">
+              {/* Right: Property Count + Login */}
+              <div className="flex justify-end items-center gap-3">
                 <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm border border-sand-50/20">
                   <span className="text-sm font-semibold text-sand-50">
                     {properties.length} {properties.length === 1 ? 'property' : 'properties'}
                   </span>
                 </div>
+                <LoginButton 
+                  onOpenProfile={() => {
+                    setShowProfile(true);
+                    setSelectedProperty(null);
+                    setPrediction(null);
+                  }}
+                  onPropertySelect={(property) => {
+                    handlePropertyClick(property);
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -213,6 +231,28 @@ function App() {
           <div className="flex-1 relative h-full w-full">
             {/* Filter Bar - Right side */}
             <div className="absolute top-4 right-4 z-[1000] flex gap-2 flex-wrap justify-end">
+              <button
+                onClick={() => setMapLayer(prev => prev === 'osm' ? 'satellite' : 'osm')}
+                className={`flex items-center justify-center gap-2 px-4 py-2.5 border rounded-lg shadow-sm transition-all h-[42px] w-[130px] ${
+                  mapLayer === 'satellite' 
+                    ? 'border-forest-500 bg-forest-50 text-forest-800 font-semibold shadow-md' 
+                    : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50 font-medium'
+                }`}
+                aria-label="Toggle map layer"
+                title={mapLayer === 'osm' ? "Switch to Satellite View" : "Switch to Default Map"}
+              >
+                {mapLayer === 'osm' ? (
+                  <>
+                    <Map className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <span className="text-sm">Map View</span>
+                  </>
+                ) : (
+                  <>
+                    <Layers className="w-4 h-4 text-forest-600 flex-shrink-0" />
+                    <span className="text-sm">Satellite</span>
+                  </>
+                )}
+              </button>
               <FilterPanel
                 properties={allProperties}
                 onFilterChange={handleFilterChange}
@@ -228,6 +268,7 @@ function App() {
               onPropertyClick={handlePropertyClick}
               selectedProperty={selectedProperty}
               showHeatmap={showHeatmap}
+              mapLayer={mapLayer}
             />
           </div>
 
@@ -243,7 +284,22 @@ function App() {
               onPredict={setPrediction}
             />
           )}
+
+          {/* Profile Panel */}
+          {showProfile && user && (
+            <ProfilePanel
+              onClose={() => setShowProfile(false)}
+              allProperties={allProperties}
+              onPropertySelect={(property) => {
+                handlePropertyClick(property);
+                setShowProfile(false);
+              }}
+            />
+          )}
         </div>
+
+        {/* Auth Prompt Modal */}
+        <AuthPrompt />
 
         {/* Analytics Footer */}
         {loading ? (

@@ -24,6 +24,10 @@ FEATURE_COLUMNS = [
     'plot_size_sqft',
     'bhk',
     'property_age_years',
+    'floor_number',
+    'furnishing_semi',
+    'furnishing_fully',
+    'rera_registered',
     'dist_railway_station_km',
     'dist_airport_km',
     'dist_city_center_km',
@@ -38,4 +42,31 @@ TARGET_COLUMN = 'actual_fair_value'
 BHOPAL_CENTER = {
     'lat': 23.2599,
     'lng': 77.4126
+}
+
+# Base prices for trend simulation
+ZONE_BASE_PRICES = {
+    "Arera Colony": 8500,
+    "Shamla Hills": 9200,
+    "Bawadia Kalan": 7800,
+    "Raisen Road": 7500,
+    "MP Nagar": 7000,
+    "Bittan Market": 6800,
+    "DB City Road": 7200,
+    "Kolar Road": 4500,
+    "Hoshangabad Road": 5200,
+    "Ayodhya Bypass": 4200,
+    "Misrod": 3800,
+    "Danish Kunj": 4300,
+    "Katara Hills": 4100,
+    "Awadhpuri": 3900,
+    "Bairagarh": 3500,
+    "Karond": 3200,
+    "Bhanpur": 3100,
+    "Piplani": 4000,
+    "Govindpura": 4500,
+    "Jahangirabad": 3800,
+    "Nehru Nagar": 5500,
+    "Indrapuri": 4800,
+    "Anand Nagar": 4200
 }

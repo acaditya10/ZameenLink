@@ -96,9 +96,30 @@ def add_distance_features(df):
         lambda x: calculate_zone_price_index(ZONE_BASE_PRICES.get(x, 5000))
     )
     
-    print(f"✓ Added {len(distance_df.columns) + 1} engineered features")
+    # Encode furnishing_status as binary columns
+    if 'furnishing_status' in df.columns:
+        df['furnishing_semi'] = (df['furnishing_status'] == 'semi-furnished').astype(int)
+        df['furnishing_fully'] = (df['furnishing_status'] == 'fully-furnished').astype(int)
+    else:
+        df['furnishing_semi'] = 0
+        df['furnishing_fully'] = 0
+    
+    # Ensure rera_registered is int
+    if 'rera_registered' in df.columns:
+        df['rera_registered'] = df['rera_registered'].astype(int)
+    else:
+        df['rera_registered'] = 0
+    
+    # Ensure floor_number exists
+    if 'floor_number' not in df.columns:
+        df['floor_number'] = 0
+    
+    engineered_count = len(distance_df.columns) + 4  # zone_price_index + furnishing_semi + furnishing_fully + rera encoding
+    print(f"✓ Added {engineered_count} engineered features")
     print(f"  - {len(distance_df.columns)} distance features")
     print(f"  - 1 zone price index")
+    print(f"  - 2 furnishing encodings")
+    print(f"  - 1 RERA encoding")
     
     return df
 
@@ -110,6 +131,10 @@ FEATURE_COLUMNS = [
     'plot_size_sqft',
     'bhk',
     'property_age_years',
+    'floor_number',
+    'furnishing_semi',
+    'furnishing_fully',
+    'rera_registered',
     'dist_railway_station_km',
     'dist_airport_km',
     'dist_city_center_km',

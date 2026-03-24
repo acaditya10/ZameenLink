@@ -9,7 +9,7 @@ const api = axios.create({
     }
 });
 
-export const fetchProperties = async (limit = 100, area = null) => {
+export const fetchProperties = async (limit = 1000, area = null) => {
     const params = { limit };
     if (area) params.area = area;
 
@@ -34,6 +34,26 @@ export const fetchHeatmapData = async () => {
 
 export const fetchAreas = async () => {
     const response = await api.get('/areas');
+    return response.data;
+};
+
+export const calculateEMI = async (emiData) => {
+    const response = await api.post('/emi', emiData);
+    return response.data;
+};
+
+export const fetchTrends = async (area) => {
+    const response = await api.get('/trends', { params: { area } });
+    return response.data;
+};
+
+export const triggerRetrain = async () => {
+    const response = await api.post('/retrain');
+    return response.data;
+};
+
+export const fetchRetrainStatus = async () => {
+    const response = await api.get('/retrain/status');
     return response.data;
 };
 

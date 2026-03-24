@@ -32,7 +32,7 @@ def train_models():
     
     # Step 1: Generate and prepare data
     print("\n[1/5] Generating synthetic Bhopal property data...")
-    df = generate_bhopal_data(n_properties=300)
+    df = generate_bhopal_data(n_properties=1000)
     
     print("\n[2/5] Engineering features (distance calculations)...")
     df = add_distance_features(df)
