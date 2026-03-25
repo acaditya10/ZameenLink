@@ -77,9 +77,36 @@ export async function removeSavedProperty(userId, propertyId) {
   }
 }
 
-export async function getSavedProperties(_userId) {
-  // Return from localStorage (instant, always works)
-  return readLocal(SAVED_KEY);
+const withTimeout = (promise, ms = 3000) => {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore request timed out')), ms))
+  ]);
+};
+
+export async function getSavedProperties(userId) {
+  try {
+    if (!userId) return readLocal(SAVED_KEY);
+    
+    const ref = collection(db, 'users', userId, 'savedProperties');
+    const q = query(ref, orderBy('savedAt', 'desc'));
+    const snapshot = await withTimeout(getDocs(q), 3000);
+    
+    const properties = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        ...data,
+        savedAt: data.savedAt?.toDate ? data.savedAt.toDate().toISOString() : data.savedAt
+      };
+    });
+    
+    // Sync to local storage for quick access
+    writeLocal(SAVED_KEY, properties);
+    return properties;
+  } catch (err) {
+    console.warn('Firestore fetch failed, using local storage:', err.message);
+    return readLocal(SAVED_KEY);
+  }
 }
 
 // ─── Prediction History ─────────────────────────────────────
@@ -119,7 +146,28 @@ export async function savePredictionHistory(userId, property, prediction) {
   }
 }
 
-export async function getPredictionHistory(_userId, _maxResults = 20) {
-  // Return from localStorage (instant, always works)
-  return readLocal(HISTORY_KEY);
+export async function getPredictionHistory(userId, maxResults = 20) {
+  try {
+    if (!userId) return readLocal(HISTORY_KEY);
+    
+    const ref = collection(db, 'users', userId, 'predictionHistory');
+    const q = query(ref, orderBy('createdAt', 'desc'), limit(maxResults));
+    const snapshot = await withTimeout(getDocs(q), 3000);
+    
+    const history = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : data.createdAt
+      };
+    });
+    
+    // Sync to local storage
+    writeLocal(HISTORY_KEY, history);
+    return history;
+  } catch (err) {
+    console.warn('Firestore history fetch failed, using local storage:', err.message);
+    return readLocal(HISTORY_KEY);
+  }
 }
