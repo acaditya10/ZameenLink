@@ -19,18 +19,18 @@ function AuthPrompt() {
     <div className="fixed inset-0 z-[3000] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-charcoal-500/50 backdrop-blur-sm"
         onClick={dismissAuthPrompt}
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 fade-in">
+      <div className="relative bg-sand-50 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-in zoom-in-95 fade-in border border-sand-300">
         {/* Header gradient */}
         <div className="bg-gradient-to-br from-forest-500 to-forest-700 px-6 pt-8 pb-6 text-center">
-          <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+          <div className="w-16 h-16 bg-sand-50/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
             <Shield className="text-gold-400" size={32} />
           </div>
-          <h2 className="text-2xl font-bold text-white">Unlock Full Access</h2>
+          <h2 className="text-2xl font-bold text-sand-50">Unlock Full Access</h2>
           <p className="text-sand-200 text-sm mt-2">
             Sign in to continue exploring with unlimited predictions
           </p>
@@ -43,8 +43,8 @@ function AuthPrompt() {
               <Sparkles size={16} className="text-forest-600" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-800">Unlimited Predictions</p>
-              <p className="text-xs text-gray-500">Run as many price predictions as you want</p>
+              <p className="text-sm font-semibold text-charcoal-500">Unlimited Predictions</p>
+              <p className="text-xs text-sand-700">Run as many price predictions as you want</p>
             </div>
           </div>
 
@@ -53,8 +53,8 @@ function AuthPrompt() {
               <BookmarkPlus size={16} className="text-forest-600" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-800">Save Properties</p>
-              <p className="text-xs text-gray-500">Bookmark and revisit your favorite listings</p>
+              <p className="text-sm font-semibold text-charcoal-500">Save Properties</p>
+              <p className="text-xs text-sand-700">Bookmark and revisit your favorite listings</p>
             </div>
           </div>
 
@@ -63,8 +63,8 @@ function AuthPrompt() {
               <History size={16} className="text-forest-600" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-800">Prediction History</p>
-              <p className="text-xs text-gray-500">Track all your past property analyses</p>
+              <p className="text-sm font-semibold text-charcoal-500">Prediction History</p>
+              <p className="text-xs text-sand-700">Track all your past property analyses</p>
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@ function AuthPrompt() {
         <div className="px-6 pb-6 space-y-3">
           <button
             onClick={handleSignIn}
-            className="w-full flex items-center justify-center gap-3 bg-forest-600 hover:bg-forest-700 text-white py-3 px-4 rounded-xl font-semibold text-sm transition-colors shadow-lg shadow-forest-500/20"
+            className="w-full flex items-center justify-center gap-3 bg-forest-600 hover:bg-forest-700 text-sand-50 py-3 px-4 rounded-xl font-semibold text-sm transition-all duration-200 shadow-lg shadow-forest-500/20 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
@@ -86,7 +86,7 @@ function AuthPrompt() {
 
           <button
             onClick={dismissAuthPrompt}
-            className="w-full text-gray-500 hover:text-gray-700 py-2 text-sm font-medium transition-colors"
+            className="w-full text-sand-700 hover:text-charcoal-500 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-forest-500 rounded"
           >
             Maybe Later
           </button>

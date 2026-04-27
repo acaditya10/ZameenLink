@@ -52,48 +52,48 @@ function EMICalculator({ propertyPrice }) {
     const COLORS = ['#2C4F38', '#D4A373'];
 
     return (
-        <div className="bg-white rounded-xl border border-forest-200 overflow-hidden shadow-sm mt-4">
+        <div className="bg-sand-50 rounded-xl border border-forest-200 overflow-hidden shadow-sm mt-4">
             <div className="bg-forest-50 px-4 py-3 border-b border-forest-100 flex items-center gap-2">
                 <Calculator size={18} className="text-forest-600" />
                 <h3 className="font-semibold text-forest-800">EMI Calculator</h3>
             </div>
-            
+
             <div className="p-4 space-y-4">
                 {/* Inputs */}
                 <div className="space-y-3">
                     <div>
                         <div className="flex justify-between text-xs mb-1">
-                            <span className="text-charcoal-light font-medium">Down Payment ({downPayment}%)</span>
+                            <span className="text-sand-700 font-medium">Down Payment ({downPayment}%)</span>
                             <span className="text-forest-700 font-semibold">{formatPrice(principal * (downPayment/100))}</span>
                         </div>
-                        <input 
+                        <input
                             type="range" min="0" max="80" step="5"
                             value={downPayment} onChange={(e) => setDownPayment(Number(e.target.value))}
-                            className="w-full accent-forest-600"
+                            className="w-full h-2 bg-sand-300 rounded-lg appearance-none cursor-pointer accent-forest-600 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
                         />
                     </div>
-                    
+
                     <div>
                         <div className="flex justify-between text-xs mb-1">
-                            <span className="text-charcoal-light font-medium">Interest Rate</span>
+                            <span className="text-sand-700 font-medium">Interest Rate</span>
                             <span className="text-forest-700 font-semibold">{rate}%</span>
                         </div>
-                        <input 
+                        <input
                             type="range" min="6.5" max="15" step="0.1"
                             value={rate} onChange={(e) => setRate(Number(e.target.value))}
-                            className="w-full accent-forest-600"
+                            className="w-full h-2 bg-sand-300 rounded-lg appearance-none cursor-pointer accent-forest-600 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
                         />
                     </div>
-                    
+
                     <div>
                         <div className="flex justify-between text-xs mb-1">
-                            <span className="text-charcoal-light font-medium">Tenure (Years)</span>
+                            <span className="text-sand-700 font-medium">Tenure (Years)</span>
                             <span className="text-forest-700 font-semibold">{tenure} Yrs</span>
                         </div>
-                        <input 
+                        <input
                             type="range" min="5" max="30" step="1"
                             value={tenure} onChange={(e) => setTenure(Number(e.target.value))}
-                            className="w-full accent-forest-600"
+                            className="w-full h-2 bg-sand-300 rounded-lg appearance-none cursor-pointer accent-forest-600 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
                         />
                     </div>
                 </div>
@@ -101,10 +101,10 @@ function EMICalculator({ propertyPrice }) {
                 {/* Results UI */}
                 <div className="flex items-center pt-2 border-t border-forest-100/50">
                     <div className="flex-1">
-                        <p className="text-xs text-charcoal-light mb-1 uppercase tracking-wider">Monthly EMI</p>
+                        <p className="text-xs text-sand-700 mb-1 uppercase tracking-wider font-semibold">Monthly EMI</p>
                         <p className="text-2xl font-bold text-forest-700">{formatPrice(result.monthly_emi)}</p>
                     </div>
-                    
+
                     <div className="w-24 h-24">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
@@ -121,33 +121,33 @@ function EMICalculator({ propertyPrice }) {
                         </ResponsiveContainer>
                     </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="bg-forest-50 p-2 rounded flex items-center gap-1.5">
+                    <div className="bg-forest-50 p-2 rounded-lg flex items-center gap-1.5">
                         <div className="w-2.5 h-2.5 rounded-full bg-forest-800"></div>
-                        <span className="text-charcoal-light flex-1">Loan</span>
+                        <span className="text-sand-700 flex-1">Loan</span>
                         <span className="font-semibold text-forest-800">{formatPrice(result.loan_amount)}</span>
                     </div>
-                    <div className="bg-gold-50 p-2 rounded flex items-center gap-1.5">
+                    <div className="bg-gold-50 p-2 rounded-lg flex items-center gap-1.5">
                         <div className="w-2.5 h-2.5 rounded-full bg-gold-400"></div>
-                        <span className="text-charcoal-light flex-1">Interest</span>
+                        <span className="text-sand-700 flex-1">Interest</span>
                         <span className="font-semibold text-forest-800">{formatPrice(result.total_interest)}</span>
                     </div>
                 </div>
 
                 {/* Optional Schedule */}
-                <button 
+                <button
                     onClick={() => setShowSchedule(!showSchedule)}
-                    className="w-full flex items-center justify-center gap-1 text-xs text-forest-600 font-semibold pt-2"
+                    className="w-full flex items-center justify-center gap-1 text-xs text-forest-600 font-semibold pt-2 focus:outline-none focus:ring-2 focus:ring-forest-500 rounded"
                 >
                     {showSchedule ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
                     {showSchedule ? 'Hide Schedule' : 'View First Year Schedule'}
                 </button>
-                
+
                 {showSchedule && result.amortization_schedule && (
                     <div className="overflow-x-auto mt-2">
-                        <table className="w-full text-xs text-left text-gray-500">
-                            <thead className="text-[10px] text-gray-700 uppercase bg-gray-50 border-b">
+                        <table className="w-full text-xs text-left text-sand-700">
+                            <thead className="text-[10px] text-charcoal-500 uppercase bg-sand-100 border-b border-sand-300">
                                 <tr>
                                     <th className="px-2 py-1.5">Mo</th>
                                     <th className="px-2 py-1.5">Principal</th>
@@ -157,7 +157,7 @@ function EMICalculator({ propertyPrice }) {
                             </thead>
                             <tbody>
                                 {result.amortization_schedule.map((row) => (
-                                    <tr key={row.month} className="bg-white border-b hover:bg-gray-50">
+                                    <tr key={row.month} className="bg-sand-50 border-b border-sand-200 hover:bg-sand-100 transition-colors">
                                         <td className="px-2 py-1.5">{row.month}</td>
                                         <td className="px-2 py-1.5">{formatPrice(row.principal)}</td>
                                         <td className="px-2 py-1.5">{formatPrice(row.interest)}</td>

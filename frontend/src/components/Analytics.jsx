@@ -22,7 +22,7 @@ function Analytics({ metrics }) {
                 {/* Header - Always Visible */}
                 <button
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="w-full flex items-center justify-between py-3 hover:bg-sand-100/50 rounded-lg transition-colors group"
+                    className="w-full flex items-center justify-between py-3 hover:bg-sand-100/50 rounded-lg transition-colors group focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-inset"
                     aria-expanded={isExpanded}
                     aria-label={isExpanded ? 'Collapse model performance comparison' : 'Expand model performance comparison'}
                 >
@@ -34,7 +34,7 @@ function Analytics({ metrics }) {
                             <h3 className="text-lg font-bold text-forest-800 flex items-center gap-2">
                                 Model Performance Comparison
                             </h3>
-                            <span className="text-xs text-charcoal-light">
+                            <span className="text-xs text-sand-700">
                                 {isExpanded ? 'Click to collapse' : 'Click to expand - Compare 3 ML models'}
                             </span>
                         </div>
@@ -42,7 +42,7 @@ function Analytics({ metrics }) {
 
                     <div className="flex items-center gap-3">
                         {!isExpanded && (
-                            <span className="text-xs text-charcoal-light bg-sand-200 px-2 py-1 rounded hidden md:block">
+                            <span className="text-xs text-sand-700 bg-sand-200 px-2 py-1 rounded-full hidden md:block">
                                 Lower error (RMSE/MAE) = Better accuracy
                             </span>
                         )}
@@ -65,7 +65,7 @@ function Analytics({ metrics }) {
                     <div className="pt-2 pb-3">
                         {/* Info Badge */}
                         <div className="flex items-center justify-end mb-3">
-                            <span className="text-xs text-charcoal-light bg-sand-200 px-3 py-1.5 rounded-full">
+                            <span className="text-xs text-sand-700 bg-sand-200 px-3 py-1.5 rounded-full">
                                 📊 Lower error (RMSE/MAE) = Better accuracy
                             </span>
                         </div>
@@ -102,7 +102,7 @@ function Analytics({ metrics }) {
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
-                        
+
                         <RetrainStatus />
                     </div>
                 </div>

@@ -87,14 +87,14 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
             {/* Filter Toggle Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors h-[42px]"
+                className="flex items-center gap-2 px-4 py-2.5 bg-sand-50 border border-sand-300 rounded-lg shadow-sm hover:bg-sand-100 transition-all duration-200 h-[42px] focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
                 aria-label="Open filter panel"
                 aria-expanded={isOpen}
             >
-                <SlidersHorizontal className="w-4 h-4 text-gray-600" />
-                <span className="font-medium text-gray-700 text-sm">Filters</span>
+                <SlidersHorizontal className="w-4 h-4 text-charcoal-500" />
+                <span className="font-medium text-charcoal-500 text-sm">Filters</span>
                 {activeFilterCount > 0 && (
-                    <span className="ml-1 px-1.5 py-0.5 bg-forest-500 text-white text-xs font-semibold rounded-full">
+                    <span className="ml-1 px-1.5 py-0.5 bg-forest-500 text-sand-50 text-xs font-semibold rounded-full">
                         {activeFilterCount}
                     </span>
                 )}
@@ -105,41 +105,41 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                 <>
                     {/* Overlay */}
                     <div
-                        className="fixed inset-0 bg-black/20 z-[1000]"
+                        className="fixed inset-0 bg-charcoal-500/20 backdrop-blur-sm z-[1000]"
                         onClick={() => setIsOpen(false)}
                         aria-hidden="true"
                     />
 
                     {/* Panel - Centered Modal */}
                     <div
-                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md bg-white rounded-lg shadow-2xl z-[1001] border border-gray-200 overflow-hidden"
+                        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] sm:w-[90%] max-w-md bg-sand-50 rounded-xl shadow-2xl z-[1001] border border-sand-300 overflow-hidden"
                         role="dialog"
                         aria-label="Filter properties"
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
-                            <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                                <SlidersHorizontal className="w-5 h-5" />
+                        <div className="flex items-center justify-between p-4 border-b border-sand-300 bg-sand-100">
+                            <h3 className="font-semibold text-charcoal-500 flex items-center gap-2">
+                                <SlidersHorizontal className="w-5 h-5 text-forest-500" />
                                 Filter Properties
                             </h3>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1 hover:bg-gray-200 rounded-full transition-colors"
+                                className="p-1.5 hover:bg-sand-200 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-forest-500"
                                 aria-label="Close filter panel"
                             >
-                                <X className="w-5 h-5 text-gray-600" />
+                                <X className="w-5 h-5 text-charcoal-500" />
                             </button>
                         </div>
 
                         <div className="p-4 space-y-6 max-h-[70vh] overflow-y-auto">
                             {/* Price Range Filter */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <label className="block text-sm font-semibold text-charcoal-500 mb-3">
                                     Price Range
                                 </label>
                                 <div className="space-y-3">
                                     <div>
-                                        <label htmlFor="price-min" className="block text-xs text-gray-600 mb-1">
+                                        <label htmlFor="price-min" className="block text-xs text-sand-700 mb-1">
                                             Minimum: {formatPrice(filters.priceRange.min)}
                                         </label>
                                         <input
@@ -150,12 +150,12 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                                             step={500000}
                                             value={filters.priceRange.min}
                                             onChange={(e) => handlePriceChange('min', e.target.value)}
-                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-forest-500"
+                                            className="w-full h-2 bg-sand-300 rounded-lg appearance-none cursor-pointer accent-forest-500 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
                                             aria-label="Minimum price filter"
                                         />
                                     </div>
                                     <div>
-                                        <label htmlFor="price-max" className="block text-xs text-gray-600 mb-1">
+                                        <label htmlFor="price-max" className="block text-xs text-sand-700 mb-1">
                                             Maximum: {formatPrice(filters.priceRange.max)}
                                         </label>
                                         <input
@@ -166,7 +166,7 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                                             step={500000}
                                             value={filters.priceRange.max}
                                             onChange={(e) => handlePriceChange('max', e.target.value)}
-                                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-forest-500"
+                                            className="w-full h-2 bg-sand-300 rounded-lg appearance-none cursor-pointer accent-forest-500 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
                                             aria-label="Maximum price filter"
                                         />
                                     </div>
@@ -175,7 +175,7 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
 
                             {/* BHK Filter */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <label className="block text-sm font-semibold text-charcoal-500 mb-3">
                                     BHK
                                 </label>
                                 <div className="flex flex-wrap gap-2">
@@ -183,9 +183,9 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                                         <button
                                             key={bhk}
                                             onClick={() => handleBHKChange(bhk)}
-                                            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${filters.bhk.includes(bhk)
-                                                ? 'bg-forest-500 text-white shadow-md'
-                                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                            className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2 ${filters.bhk.includes(bhk)
+                                                ? 'bg-forest-500 text-sand-50 shadow-md'
+                                                : 'bg-sand-200 text-charcoal-500 hover:bg-sand-300'
                                                 }`}
                                             aria-pressed={filters.bhk.includes(bhk)}
                                             aria-label={`Filter by ${bhk} BHK`}
@@ -198,23 +198,23 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
 
                             {/* Area Filter */}
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-3">
+                                <label className="block text-sm font-semibold text-charcoal-500 mb-3">
                                     Locality ({filters.areas.length} selected)
                                 </label>
-                                <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg">
+                                <div className="max-h-48 overflow-y-auto border border-sand-300 rounded-lg">
                                     {uniqueAreas.map((area) => (
                                         <label
                                             key={area}
-                                            className="flex items-center gap-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-0"
+                                            className="flex items-center gap-3 p-3 hover:bg-sand-100 cursor-pointer border-b border-sand-200 last:border-0 transition-colors"
                                         >
                                             <input
                                                 type="checkbox"
                                                 checked={filters.areas.includes(area)}
                                                 onChange={() => handleAreaChange(area)}
-                                                className="w-4 h-4 text-forest-500 rounded focus:ring-forest-500 focus:ring-2"
+                                                className="w-4 h-4 text-forest-500 rounded focus:ring-forest-500 focus:ring-2 focus:ring-offset-2"
                                                 aria-label={`Filter by ${area}`}
                                             />
-                                            <span className="text-sm text-gray-700">{area}</span>
+                                            <span className="text-sm text-charcoal-500">{area}</span>
                                         </label>
                                     ))}
                                 </div>
@@ -222,10 +222,10 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                         </div>
 
                         {/* Footer */}
-                        <div className="p-4 border-t border-gray-200 bg-gray-50 flex gap-2">
+                        <div className="p-4 border-t border-sand-300 bg-sand-100 flex gap-2">
                             <button
                                 onClick={handleReset}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700"
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-sand-50 border border-sand-300 rounded-lg hover:bg-sand-200 transition-all duration-200 font-medium text-charcoal-500 focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
                                 aria-label="Reset all filters"
                             >
                                 <RotateCcw className="w-4 h-4" />
@@ -233,7 +233,7 @@ const FilterPanel = ({ properties, onFilterChange, className = '' }) => {
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="flex-1 px-4 py-2 bg-forest-500 text-white rounded-lg hover:bg-forest-600 transition-colors font-medium"
+                                className="flex-1 px-4 py-2 bg-forest-500 text-sand-50 rounded-lg hover:bg-forest-600 transition-all duration-200 font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-forest-500 focus:ring-offset-2"
                             >
                                 Apply
                             </button>

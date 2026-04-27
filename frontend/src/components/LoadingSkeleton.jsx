@@ -2,7 +2,7 @@ import React from 'react';
 
 // Generic Skeleton component
 export const Skeleton = ({ className = '', variant = 'rectangular' }) => {
-    const baseClasses = 'animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]';
+    const baseClasses = 'animate-pulse bg-gradient-to-r from-sand-200 via-sand-300 to-sand-200 bg-[length:200%_100%]';
 
     const variantClasses = {
         rectangular: 'rounded',
@@ -22,11 +22,11 @@ export const Skeleton = ({ className = '', variant = 'rectangular' }) => {
 // Property List Skeleton (for map markers loading)
 export const PropertyListSkeleton = () => {
     return (
-        <div className="absolute top-4 left-4 z-[1000] bg-white rounded-lg shadow-lg p-4 w-64">
+        <div className="absolute top-4 left-4 z-[1000] bg-sand-50 rounded-lg shadow-lg p-4 w-64 border border-sand-300">
             <Skeleton className="h-6 w-32 mb-4" />
             <div className="space-y-3">
                 {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="flex items-start gap-3 pb-3 border-b border-gray-100 last:border-0">
+                    <div key={i} className="flex items-start gap-3 pb-3 border-b border-sand-200 last:border-0">
                         <Skeleton variant="circular" className="w-10 h-10 shrink-0" />
                         <div className="flex-1 space-y-2">
                             <Skeleton className="h-4 w-full" />
@@ -51,7 +51,7 @@ export const PredictionSkeleton = () => {
             </div>
 
             {/* Price prediction */}
-            <div className="bg- rounded-lg p-4 space-y-3">
+            <div className="bg-sand-100 rounded-lg p-4 space-y-3 border border-sand-300">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-10 w-full" />
                 <Skeleton className="h-4 w-full" />
@@ -75,7 +75,7 @@ export const PredictionSkeleton = () => {
             <div className="space-y-3">
                 <Skeleton className="h-5 w-40" />
                 {[1, 2, 3].map((i) => (
-                    <div key={i} className="bg-gray-50 rounded-lg p-3 space-y-2">
+                    <div key={i} className="bg-sand-100 rounded-lg p-3 space-y-2 border border-sand-200">
                         <Skeleton className="h-4 w-full" />
                         <Skeleton className="h-3 w-3/4" />
                     </div>
@@ -91,14 +91,14 @@ export const PredictionSkeleton = () => {
 // Analytics Section Skeleton
 export const AnalyticsSkeleton = () => {
     return (
-        <div className="bg-white border-t border-gray-200 p-6 shrink-0">
+        <div className="bg-sand-50 border-t border-forest-500/20 p-6 shrink-0">
             <div className="container mx-auto">
                 <Skeleton className="h-7 w-56 mb-6" />
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Model cards */}
                     {[1, 2, 3].map((i) => (
-                        <div key={i} className="bg-gray-50 rounded-lg p-4 space-y-3">
+                        <div key={i} className="bg-sand-100 rounded-lg p-4 space-y-3 border border-sand-300">
                             <Skeleton className="h-5 w-32" />
                             <div className="space-y-2">
                                 <div className="flex justify-between">
@@ -130,7 +130,7 @@ export const AnalyticsSkeleton = () => {
 // Map Loading Skeleton
 export const MapSkeleton = () => {
     return (
-        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+        <div className="w-full h-full bg-sand-100 flex items-center justify-center">
             <div className="text-center space-y-4">
                 <Skeleton variant="circular" className="w-16 h-16 mx-auto" />
                 <Skeleton className="h-4 w-40 mx-auto" />

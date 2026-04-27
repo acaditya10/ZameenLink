@@ -55,10 +55,10 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
   ];
 
   return (
-    <div className="absolute right-0 top-0 h-full w-full md:w-96 bg-white shadow-2xl overflow-y-auto z-[1100] border-l border-gray-200 transition-transform duration-300 ease-in-out">
+    <div className="absolute right-0 top-0 h-full w-full md:w-96 bg-sand-50 shadow-2xl overflow-y-auto z-[1100] border-l border-sand-300 transition-transform duration-300 ease-in-out">
       {/* Backdrop for mobile */}
       <div
-        className="fixed inset-0 bg-black/30 md:hidden -z-10"
+        className="fixed inset-0 bg-charcoal-500/30 backdrop-blur-sm md:hidden -z-10"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -75,7 +75,7 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
                 referrerPolicy="no-referrer"
               />
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gold-500 flex items-center justify-center text-white text-lg font-bold">
+              <div className="w-12 h-12 rounded-full bg-gold-500 flex items-center justify-center text-sand-50 text-lg font-bold">
                 {(user.displayName || 'U')[0].toUpperCase()}
               </div>
             )}
@@ -86,7 +86,7 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
           </div>
           <button
             onClick={onClose}
-            className="hover:bg-white/10 p-2 rounded-lg transition text-sand-100 hover:text-sand-50"
+            className="hover:bg-sand-50/20 p-2 rounded-lg transition-all duration-200 text-sand-100 hover:text-sand-50 focus:outline-none focus:ring-2 focus:ring-gold-500"
             aria-label="Close profile"
           >
             <X size={22} />
@@ -94,15 +94,15 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 bg-white/10 rounded-lg p-1">
+        <div className="flex gap-1 bg-sand-50/10 rounded-lg p-1">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-md text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gold-500 ${
                 activeTab === tab.id
-                  ? 'bg-white text-forest-700 shadow-sm'
-                  : 'text-sand-200 hover:text-white hover:bg-white/10'
+                  ? 'bg-sand-50 text-forest-700 shadow-sm'
+                  : 'text-sand-200 hover:text-sand-50 hover:bg-sand-50/10'
               }`}
             >
               <tab.icon size={15} />
@@ -111,7 +111,7 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
                 <span className={`text-xs px-1.5 py-0.5 rounded-full ${
                   activeTab === tab.id
                     ? 'bg-forest-100 text-forest-700'
-                    : 'bg-white/20 text-white'
+                    : 'bg-sand-50/20 text-sand-50'
                 }`}>
                   {tab.count}
                 </span>
@@ -124,16 +124,16 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
       {/* Content */}
       <div className="p-4">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-            <Loader2 size={32} className="animate-spin mb-3" />
+          <div className="flex flex-col items-center justify-center py-16 text-sand-700">
+            <Loader2 size={32} className="animate-spin mb-3 text-forest-600" />
             <p className="text-sm">Loading...</p>
           </div>
         ) : activeTab === 'saved' ? (
           /* Saved Properties Tab */
           savedProperties.length === 0 ? (
-            <div className="text-center py-16 text-gray-400">
-              <Bookmark size={40} className="mx-auto mb-3 opacity-50" />
-              <p className="font-medium text-gray-500">No saved properties</p>
+            <div className="text-center py-16 text-sand-700">
+              <Bookmark size={40} className="mx-auto mb-3 opacity-50 text-sand-500" />
+              <p className="font-medium text-charcoal-500">No saved properties</p>
               <p className="text-sm mt-1">Click the bookmark icon on any property to save it here</p>
             </div>
           ) : (
@@ -141,7 +141,7 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
               {savedProperties.map((property) => (
                 <div
                   key={property.property_id}
-                  className="bg-gray-50 rounded-xl p-4 border border-gray-200 hover:border-forest-300 transition-colors group"
+                  className="bg-sand-100 rounded-xl p-4 border border-sand-300 hover:border-forest-300 transition-all duration-200 group"
                 >
                   <div className="flex items-start justify-between">
                     <button
@@ -149,16 +149,16 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
                         onPropertySelect(property);
                         onClose();
                       }}
-                      className="flex-1 text-left"
+                      className="flex-1 text-left focus:outline-none focus:ring-2 focus:ring-forest-500 rounded"
                     >
-                      <h3 className="font-semibold text-gray-800 group-hover:text-forest-700 transition-colors flex items-center gap-1">
+                      <h3 className="font-semibold text-charcoal-500 group-hover:text-forest-700 transition-colors flex items-center gap-1">
                         <MapPin size={14} className="text-forest-600" />
                         {property.area_name}
                       </h3>
                       <p className="text-lg font-bold text-forest-600 mt-1">
                         {formatPrice(property.actual_fair_value)}
                       </p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-3 mt-2 text-xs text-sand-700">
                         <span className="flex items-center gap-1">
                           <Home size={12} /> {property.bhk} BHK
                         </span>
@@ -167,13 +167,13 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
                     </button>
                     <button
                       onClick={() => handleRemoveSaved(property.property_id)}
-                      className="text-gray-400 hover:text-red-500 p-1.5 rounded-lg hover:bg-red-50 transition-colors"
+                      className="text-sand-600 hover:text-red-500 p-1.5 rounded-lg hover:bg-red-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
                       aria-label="Remove saved property"
                     >
                       <Trash2 size={16} />
                     </button>
                   </div>
-                  <p className="text-xs text-gray-400 mt-2">
+                  <p className="text-xs text-sand-600 mt-2">
                     Saved {formatDate(property.savedAt)}
                   </p>
                 </div>
@@ -183,9 +183,9 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
         ) : (
           /* Prediction History Tab */
           predictionHistory.length === 0 ? (
-            <div className="text-center py-16 text-gray-400">
-              <History size={40} className="mx-auto mb-3 opacity-50" />
-              <p className="font-medium text-gray-500">No prediction history</p>
+            <div className="text-center py-16 text-sand-700">
+              <History size={40} className="mx-auto mb-3 opacity-50 text-sand-500" />
+              <p className="font-medium text-charcoal-500">No prediction history</p>
               <p className="text-sm mt-1">Your price predictions will appear here</p>
             </div>
           ) : (
@@ -203,13 +203,13 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
                       onPropertySelect(matchedProperty);
                     }
                   }}
-                  className={`w-full text-left bg-gray-50 rounded-xl p-4 border border-gray-200 transition-colors ${
+                  className={`w-full text-left bg-sand-100 rounded-xl p-4 border border-sand-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-forest-500 ${
                     matchedProperty ? 'hover:border-forest-300 cursor-pointer group' : 'opacity-80'
                   }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-semibold text-gray-800 flex items-center gap-1 text-sm group-hover:text-forest-700 transition-colors">
+                      <h3 className="font-semibold text-charcoal-500 flex items-center gap-1 text-sm group-hover:text-forest-700 transition-colors">
                         <MapPin size={13} className="text-forest-600" />
                         {entry.areaName}
                       </h3>
@@ -219,22 +219,22 @@ function ProfilePanel({ onClose, onPropertySelect, allProperties = [] }) {
                     </div>
                     <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
                       entry.riskLevel === 'LOW' || entry.riskLevel === 'BARGAIN'
-                        ? 'bg-green-100 text-green-700'
+                        ? 'bg-forest-100 text-forest-700'
                         : entry.riskLevel === 'MEDIUM'
-                        ? 'bg-yellow-100 text-yellow-700'
+                        ? 'bg-gold-100 text-gold-700'
                         : entry.riskLevel === 'HIGH' || entry.riskLevel === 'CRITICAL'
                         ? 'bg-red-100 text-red-700'
-                        : 'bg-gray-100 text-gray-600'
+                        : 'bg-sand-200 text-sand-700'
                     }`}>
                       {entry.riskLevel}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                  <div className="flex items-center gap-3 mt-2 text-xs text-sand-700">
                     <span>{entry.bhk} BHK</span>
                     <span>{entry.plotSize} sq ft</span>
                     <span>₹{entry.pricePerSqft?.toFixed(0)}/sq ft</span>
                   </div>
-                  <p className="text-xs text-gray-400 mt-2">
+                  <p className="text-xs text-sand-600 mt-2">
                     {formatDate(entry.createdAt)}
                   </p>
                 </button>

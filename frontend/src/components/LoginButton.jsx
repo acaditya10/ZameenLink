@@ -46,7 +46,7 @@ function LoginButton({ onOpenProfile, onPropertySelect }) {
     return (
       <button
         onClick={signInWithGoogle}
-        className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-sand-50 px-4 py-2 rounded-lg transition-all duration-200 border border-sand-50/20 hover:border-sand-50/40 text-sm font-medium"
+        className="flex items-center gap-2 bg-sand-50/20 hover:bg-sand-50/30 backdrop-blur-sm text-sand-50 px-4 py-2 rounded-lg transition-all duration-200 border border-sand-50/30 hover:border-sand-50/50 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 focus:ring-offset-forest-500"
         aria-label="Sign in with Google"
       >
         <LogIn size={16} />
@@ -59,7 +59,7 @@ function LoginButton({ onOpenProfile, onPropertySelect }) {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg transition-all duration-200 border border-sand-50/20 hover:border-sand-50/40"
+        className="flex items-center gap-2 bg-sand-50/20 hover:bg-sand-50/30 backdrop-blur-sm px-3 py-1.5 rounded-lg transition-all duration-200 border border-sand-50/30 hover:border-sand-50/50 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 focus:ring-offset-forest-500"
         aria-label="User menu"
         aria-expanded={dropdownOpen}
       >
@@ -71,7 +71,7 @@ function LoginButton({ onOpenProfile, onPropertySelect }) {
             referrerPolicy="no-referrer"
           />
         ) : (
-          <div className="w-7 h-7 rounded-full bg-gold-500 flex items-center justify-center text-white text-xs font-bold">
+          <div className="w-7 h-7 rounded-full bg-gold-500 flex items-center justify-center text-sand-50 text-xs font-bold">
             {(user.displayName || user.email || 'U')[0].toUpperCase()}
           </div>
         )}
@@ -83,23 +83,23 @@ function LoginButton({ onOpenProfile, onPropertySelect }) {
 
       {/* Dropdown */}
       {dropdownOpen && (
-        <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden z-[2000] animate-in fade-in slide-in-from-top-2">
-          <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
-            <p className="text-sm font-semibold text-gray-800 truncate">{user.displayName}</p>
-            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+        <div className="absolute right-0 mt-2 w-72 bg-sand-50 rounded-xl shadow-xl border border-sand-300 overflow-hidden z-[2000] animate-in fade-in slide-in-from-top-2">
+          <div className="px-4 py-3 border-b border-sand-300 bg-sand-100">
+            <p className="text-sm font-semibold text-charcoal-500 truncate">{user.displayName}</p>
+            <p className="text-xs text-sand-700 truncate">{user.email}</p>
           </div>
 
           {/* Saved Properties Dropdown Area */}
           <div className="max-h-60 overflow-y-auto">
-            <div className="px-4 py-2 border-b border-gray-100 bg-forest-50 flex items-center gap-2 sticky top-0 z-10">
+            <div className="px-4 py-2 border-b border-sand-300 bg-forest-50 flex items-center gap-2 sticky top-0 z-10">
                 <Bookmark size={14} className="text-forest-600" />
                 <span className="text-xs font-semibold text-forest-800 uppercase tracking-wider">Saved Properties</span>
             </div>
-            
+
             {loadingProps ? (
                 <div className="py-6 flex flex-col items-center justify-center text-forest-600">
                     <Loader2 size={24} className="animate-spin mb-2" />
-                    <span className="text-xs text-gray-500">Loading...</span>
+                    <span className="text-xs text-sand-700">Loading...</span>
                 </div>
             ) : savedProperties.length > 0 ? (
                 savedProperties.map(prop => (
@@ -109,13 +109,13 @@ function LoginButton({ onOpenProfile, onPropertySelect }) {
                             setDropdownOpen(false);
                             if (onPropertySelect) onPropertySelect(prop);
                         }}
-                        className="w-full text-left px-4 py-3 border-b border-gray-50 hover:bg-sand-50 transition-colors group flex items-start gap-3"
+                        className="w-full text-left px-4 py-3 border-b border-sand-200 hover:bg-sand-100 transition-colors group flex items-start gap-3 focus:outline-none focus:bg-sand-100"
                     >
                         <div className="bg-forest-100 text-forest-700 px-2 py-1 rounded text-xs font-bold whitespace-nowrap">
                             #{prop.property_id}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-800 truncate flex items-center gap-1 group-hover:text-forest-700">
+                            <p className="text-sm font-medium text-charcoal-500 truncate flex items-center gap-1 group-hover:text-forest-700">
                                 <MapPin size={12} className="text-forest-500 flex-shrink-0" />
                                 <span className="truncate">{prop.area_name}</span>
                             </p>
@@ -126,19 +126,19 @@ function LoginButton({ onOpenProfile, onPropertySelect }) {
                     </button>
                 ))
             ) : (
-                <div className="py-6 px-4 text-center text-sm text-gray-500">
+                <div className="py-6 px-4 text-center text-sm text-sand-700">
                     No properties saved yet
                 </div>
             )}
           </div>
 
-          <div className="border-t border-gray-100 bg-gray-50">
+          <div className="border-t border-sand-300 bg-sand-100">
             <button
                onClick={() => {
                  setDropdownOpen(false);
                  onOpenProfile();
                }}
-               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:text-forest-700 hover:bg-forest-50 transition-colors"
+               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-charcoal-500 hover:text-forest-700 hover:bg-forest-50 transition-colors focus:outline-none focus:bg-forest-50"
             >
                <User size={16} />
                My Profile & History
@@ -148,7 +148,7 @@ function LoginButton({ onOpenProfile, onPropertySelect }) {
                  setDropdownOpen(false);
                  signOut();
                }}
-               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100"
+               className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-sand-300 focus:outline-none focus:bg-red-50"
             >
                <LogOut size={16} />
                Sign Out
